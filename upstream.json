@@ -1,0 +1,108 @@
+{
+  "$comment": "Machine-readable upstream metadata. Human guide: UPSTREAM.md. Updated by .github/workflows/upstream-sync.yml (sha.fetched/integrated) — never edit sha.pinned.",
+  "repository": "pangin/mcp-server",
+  "upstream": {
+    "url": "https://github.com/event-catalog/mcp-server.git",
+    "web": "https://github.com/event-catalog/mcp-server",
+    "defaultBranch": "main",
+    "relation": "github-fork (public, inside the fork network)"
+  },
+  "branches": {
+    "main": "main",
+    "vendor": "vendor/upstream-main",
+    "syncBranchPrefix": "sync/upstream-"
+  },
+  "sha": {
+    "pinned": "be3847d4c99282dabe772b11184295ea2d78655e",
+    "pinnedAt": "2025-12-13T07:45:14Z",
+    "pinnedTag": "v2.1.0",
+    "fetched": "be3847d4c99282dabe772b11184295ea2d78655e",
+    "fetchedAt": "2026-09-02T05:59:15Z",
+    "integrated": "be3847d4c99282dabe772b11184295ea2d78655e",
+    "integratedAt": "2026-09-02T05:59:15Z"
+  },
+  "owner": {
+    "github": "pangin",
+    "name": "성욱 (pangin)"
+  },
+  "sync": {
+    "cadence": "매주 월요일 00:00 UTC (09:00 KST) 예약 실행 + workflow_dispatch 수동 실행",
+    "workflow": ".github/workflows/upstream-sync.yml",
+    "identity": "deploy key \"upstream-sync\" (secret UPSTREAM_SYNC_SSH_KEY); fallback GITHUB_TOKEN with warning",
+    "mergeStrategy": "merge commit only (squash/rebase disabled at repository level)",
+    "botPushesMain": false
+  },
+  "role": {
+    "classification": "optional",
+    "reason": "이미 배포된 EventCatalog 인스턴스의 llms.txt를 읽는 독립 MCP 서버. core 빌드·기동에 불필요하며, 실행 시 EVENTCATALOG_SCALE_LICENSE_KEY가 없으면 기동을 거부한다."
+  },
+  "licenseBoundary": {
+    "root": "EventCatalog License (LICENSE.md): OSS/비상업 사용은 MIT, 사내·상업 사용은 Pro/Enterprise 라이선스 필요",
+    "commercialPaths": [
+      "저장소 전체"
+    ],
+    "productionRestriction": "사내 사용은 상용 라이선스 필요 + 실행에 Scale license key 필수",
+    "licenseKeyEnvVars": [
+      "EVENTCATALOG_SCALE_LICENSE_KEY"
+    ],
+    "ossOnlyPolicy": "빌드·테스트만. 서버 기동은 Scale key 없이는 불가.",
+    "licenseFiles": [
+      "LICENSE.md"
+    ],
+    "noticeFiles": []
+  },
+  "build": {
+    "node": "20.x",
+    "packageManager": "pnpm",
+    "lockfiles": [
+      "pnpm-lock.yaml"
+    ],
+    "install": "pnpm install --frozen-lockfile",
+    "build": "pnpm run build",
+    "test": "pnpm run test",
+    "run": "node dist/index.js <EVENTCATALOG_URL> <EVENTCATALOG_SCALE_LICENSE_KEY> [stdio|http] [PORT]",
+    "smoke": "인자 없이 node dist/index.js 실행 시 'EVENTCATALOG_URL is not set' 으로 종료코드 1 (번들이 로드됨을 증명)",
+    "verifyWorkflow": ".github/workflows/fork-verify.yml"
+  },
+  "upstreamWorkflows": [
+    {
+      "file": ".github/workflows/lint.yml",
+      "triggers": "pull_request to branches master, main (lint.yml:3-7)",
+      "guardedToUpstreamRepo": false
+    },
+    {
+      "file": ".github/workflows/verify-build.yml",
+      "triggers": "pull_request to branches master, main (verify-build.yml:4-8)",
+      "guardedToUpstreamRepo": false
+    },
+    {
+      "file": ".github/workflows/release.yml",
+      "triggers": "push to branches master, next, main (release.yml:2-7)",
+      "guardedToUpstreamRepo": true
+    }
+  ],
+  "protection": {
+    "main": [
+      "pull-request-only",
+      "required review 1 (admin bypass for PR merge)",
+      "required checks: Fork Verify jobs",
+      "merge commit only",
+      "no force-push",
+      "no deletion"
+    ],
+    "vendor/upstream-main": [
+      "updates only by sync identity (deploy key)",
+      "no force-push",
+      "no deletion"
+    ],
+    "appliedAt": null,
+    "note": "GitHub rulesets on public repos (Free plan). appliedAt is filled when rulesets are active."
+  },
+  "linear": [
+    "GONG-871",
+    "GONG-872",
+    "GONG-876",
+    "GONG-875"
+  ],
+  "generatedAt": "2026-09-02T05:59:15Z"
+}
