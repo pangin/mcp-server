@@ -17,9 +17,9 @@
     "pinnedAt": "2025-12-13T07:45:14Z",
     "pinnedTag": "v2.1.0",
     "fetched": "be3847d4c99282dabe772b11184295ea2d78655e",
-    "fetchedAt": "2026-09-02T05:59:15Z",
+    "fetchedAt": "2026-09-02T06:07:17Z",
     "integrated": "be3847d4c99282dabe772b11184295ea2d78655e",
-    "integratedAt": "2026-09-02T05:59:15Z"
+    "integratedAt": "2026-09-02T06:07:17Z"
   },
   "owner": {
     "github": "pangin",
@@ -38,25 +38,17 @@
   },
   "licenseBoundary": {
     "root": "EventCatalog License (LICENSE.md): OSS/비상업 사용은 MIT, 사내·상업 사용은 Pro/Enterprise 라이선스 필요",
-    "commercialPaths": [
-      "저장소 전체"
-    ],
+    "commercialPaths": ["저장소 전체"],
     "productionRestriction": "사내 사용은 상용 라이선스 필요 + 실행에 Scale license key 필수",
-    "licenseKeyEnvVars": [
-      "EVENTCATALOG_SCALE_LICENSE_KEY"
-    ],
+    "licenseKeyEnvVars": ["EVENTCATALOG_SCALE_LICENSE_KEY"],
     "ossOnlyPolicy": "빌드·테스트만. 서버 기동은 Scale key 없이는 불가.",
-    "licenseFiles": [
-      "LICENSE.md"
-    ],
+    "licenseFiles": ["LICENSE.md"],
     "noticeFiles": []
   },
   "build": {
     "node": "20.x",
     "packageManager": "pnpm",
-    "lockfiles": [
-      "pnpm-lock.yaml"
-    ],
+    "lockfiles": ["pnpm-lock.yaml"],
     "install": "pnpm install --frozen-lockfile",
     "build": "pnpm run build",
     "test": "pnpm run test",
@@ -98,11 +90,6 @@
     "appliedAt": null,
     "note": "GitHub rulesets on public repos (Free plan). appliedAt is filled when rulesets are active."
   },
-  "linear": [
-    "GONG-871",
-    "GONG-872",
-    "GONG-876",
-    "GONG-875"
-  ],
-  "generatedAt": "2026-09-02T05:59:15Z"
+  "linear": ["GONG-871", "GONG-872", "GONG-876", "GONG-875"],
+  "generatedAt": "2026-09-02T06:07:17Z"
 }

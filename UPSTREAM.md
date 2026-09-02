@@ -2,27 +2,27 @@
 
 이 저장소는 `event-catalog/mcp-server`의 **GitHub fork**(fork network 내부, public)입니다. 원본 기준선과 내부 수정선을 분리해 추적하며, 기계가 읽는 값은 [upstream.json](./upstream.json)에 있습니다.
 
-| 항목 | 값 |
-|---|---|
-| upstream | https://github.com/event-catalog/mcp-server (default branch `main`) |
-| fork | https://github.com/pangin/mcp-server |
-| 관계 | GitHub fork (public). 원본 fork network에 연결되어 있어 GitHub compare/PR UI로 upstream과 비교 가능 |
-| 기준(pinned) SHA | `be3847d4c99282dabe772b11184295ea2d78655e` (2025-12-13T07:45:14Z, tag `v2.1.0`) |
-| 현재 fetched / integrated SHA | `upstream.json` → `.sha.fetched`, `.sha.integrated` (sync workflow가 갱신) |
-| owner | 성욱 (pangin) |
-| 역할 분류 | **optional** — 이미 배포된 EventCatalog 인스턴스의 llms.txt를 읽는 독립 MCP 서버. core 빌드·기동에 불필요하며, 실행 시 EVENTCATALOG_SCALE_LICENSE_KEY가 없으면 기동을 거부한다. |
-| 라이선스(root) | EventCatalog License (LICENSE.md): OSS/비상업 사용은 MIT, 사내·상업 사용은 Pro/Enterprise 라이선스 필요 |
-| 동기화 주기 | 매주 월요일 00:00 UTC (09:00 KST) 예약 실행 + workflow_dispatch 수동 실행 |
-| 동기화 identity | deploy key `upstream-sync`(secret `UPSTREAM_SYNC_SSH_KEY`). 미등록 시 GITHUB_TOKEN으로 push하며 경고 출력 |
-| Linear | GONG-871, GONG-872, GONG-876, GONG-875 |
+| 항목                          | 값                                                                                                                                                                              |
+| ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| upstream                      | https://github.com/event-catalog/mcp-server (default branch `main`)                                                                                                             |
+| fork                          | https://github.com/pangin/mcp-server                                                                                                                                            |
+| 관계                          | GitHub fork (public). 원본 fork network에 연결되어 있어 GitHub compare/PR UI로 upstream과 비교 가능                                                                             |
+| 기준(pinned) SHA              | `be3847d4c99282dabe772b11184295ea2d78655e` (2025-12-13T07:45:14Z, tag `v2.1.0`)                                                                                                 |
+| 현재 fetched / integrated SHA | `upstream.json` → `.sha.fetched`, `.sha.integrated` (sync workflow가 갱신)                                                                                                      |
+| owner                         | 성욱 (pangin)                                                                                                                                                                   |
+| 역할 분류                     | **optional** — 이미 배포된 EventCatalog 인스턴스의 llms.txt를 읽는 독립 MCP 서버. core 빌드·기동에 불필요하며, 실행 시 EVENTCATALOG_SCALE_LICENSE_KEY가 없으면 기동을 거부한다. |
+| 라이선스(root)                | EventCatalog License (LICENSE.md): OSS/비상업 사용은 MIT, 사내·상업 사용은 Pro/Enterprise 라이선스 필요                                                                         |
+| 동기화 주기                   | 매주 월요일 00:00 UTC (09:00 KST) 예약 실행 + workflow_dispatch 수동 실행                                                                                                       |
+| 동기화 identity               | deploy key `upstream-sync`(secret `UPSTREAM_SYNC_SSH_KEY`). 미등록 시 GITHUB_TOKEN으로 push하며 경고 출력                                                                       |
+| Linear                        | GONG-871, GONG-872, GONG-876, GONG-875                                                                                                                                          |
 
 ## 브랜치 모델
 
-| 브랜치 | 용도 | 규칙 |
-|---|---|---|
-| `vendor/upstream-main` | upstream `main`의 **exact commit**만 담는 원본 기준선 | 내부 commit·metadata 금지. 사람의 direct push 금지, sync identity만 fast-forward 갱신. force-push·삭제 금지 |
-| `main` | 내부 수정·배포 기준선(default branch) | PR로만 변경, merge commit만 허용(squash/rebase 비활성), force-push·삭제 금지, required check = `Fork Verify` |
-| `sync/upstream-<YYYYMMDD>-<sha12>` | upstream 변경을 `main`에 반영하는 PR 브랜치 | bot이 생성. `main`에는 bot이 직접 push하지 않음 |
+| 브랜치                             | 용도                                                  | 규칙                                                                                                         |
+| ---------------------------------- | ----------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| `vendor/upstream-main`             | upstream `main`의 **exact commit**만 담는 원본 기준선 | 내부 commit·metadata 금지. 사람의 direct push 금지, sync identity만 fast-forward 갱신. force-push·삭제 금지  |
+| `main`                             | 내부 수정·배포 기준선(default branch)                 | PR로만 변경, merge commit만 허용(squash/rebase 비활성), force-push·삭제 금지, required check = `Fork Verify` |
+| `sync/upstream-<YYYYMMDD>-<sha12>` | upstream 변경을 `main`에 반영하는 PR 브랜치           | bot이 생성. `main`에는 bot이 직접 push하지 않음                                                              |
 
 Git remote는 GitHub 저장소의 속성이 아니라 **checkout/CI 설정**입니다. 모든 checkout과 CI에서 다음 규칙을 적용합니다.
 
@@ -57,16 +57,16 @@ git merge-base --is-ancestor origin/vendor/upstream-main upstream/main && echo "
 
 ## Clean build / run (runbook)
 
-| 항목 | 값 |
-|---|---|
-| Node | 20.x |
-| package manager | pnpm (lockfile: pnpm-lock.yaml) |
-| install | `pnpm install --frozen-lockfile` |
-| build | `pnpm run build` |
-| test | `pnpm run test` |
-| run | `node dist/index.js <EVENTCATALOG_URL> <EVENTCATALOG_SCALE_LICENSE_KEY> [stdio|http] [PORT]` |
-| smoke | 인자 없이 node dist/index.js 실행 시 'EVENTCATALOG_URL is not set' 으로 종료코드 1 (번들이 로드됨을 증명) |
-| CI | `.github/workflows/fork-verify.yml` — PR/push(main, vendor/upstream-main)/수동 실행. jobs: metadata, vendor-integrity, build |
+| 항목            | 값                                                                                                                           |
+| --------------- | ---------------------------------------------------------------------------------------------------------------------------- | ------------- |
+| Node            | 20.x                                                                                                                         |
+| package manager | pnpm (lockfile: pnpm-lock.yaml)                                                                                              |
+| install         | `pnpm install --frozen-lockfile`                                                                                             |
+| build           | `pnpm run build`                                                                                                             |
+| test            | `pnpm run test`                                                                                                              |
+| run             | `node dist/index.js <EVENTCATALOG_URL> <EVENTCATALOG_SCALE_LICENSE_KEY> [stdio                                               | http] [PORT]` |
+| smoke           | 인자 없이 node dist/index.js 실행 시 'EVENTCATALOG_URL is not set' 으로 종료코드 1 (번들이 로드됨을 증명)                    |
+| CI              | `.github/workflows/fork-verify.yml` — PR/push(main, vendor/upstream-main)/수동 실행. jobs: metadata, vendor-integrity, build |
 
 license key와 `.env` 없이(OSS-only) 실행합니다. 빌드·테스트만. 서버 기동은 Scale key 없이는 불가.
 
@@ -84,6 +84,7 @@ license key와 `.env` 없이(OSS-only) 실행합니다. 빌드·테스트만. �
 - release.yml은 repository 가드가 있어 fork에서 skip
 - verify-build.yml의 테스트는 demo.eventcatalog.dev 네트워크 접근 필요
 - lint/verify-build는 pnpm 8을 설치하지만 lockfile은 v9 — fork 검사에서는 pnpm 9 사용
+- pinned SHA에서 upstream lint.yml(prettier)이 src/types.ts 때문에 실패 — upstream 문제, fork 변경과 무관
 
 ## 보호 설정 (GitHub rulesets)
 
